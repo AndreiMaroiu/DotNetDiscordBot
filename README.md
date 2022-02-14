@@ -1,0 +1,2 @@
+# DotNetDiscordBot
+Fancy Discord Bot
