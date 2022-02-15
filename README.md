@@ -1,4 +1,4 @@
-# FancyDiscordBot
+# Fancy Discord Bot
 
 <img src="https://user-images.githubusercontent.com/79592738/153656594-2d2ae833-edde-4389-a10f-7aa6ded0732a.png">
 
@@ -14,7 +14,7 @@ The bot can:
 * some commands can send embed messages
 * can search on google requested images
 * can search on websites to find data, eg. find jokes
-* uses an api to send dadjokes
+* uses an api to send dadjokes, get age based on name or translate message to yoda-ish
 
 Hand-made features:
 * A Command Manager to choose the current command in a efficient way (dsharpplus has it's own variant, but it didn't fit my needs)
@@ -36,7 +36,6 @@ To use my code for your bot, clone or download source code and add a config file
 ```json
 {
   "discordtoken": "YOUR BOT TOKEN HERE",
-  "dadjokekey": "YOUR DAD JOKES API KEY HERE"
 }
 ```
 
