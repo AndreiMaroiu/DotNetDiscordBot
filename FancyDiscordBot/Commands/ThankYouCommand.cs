@@ -8,16 +8,11 @@ internal class ThankYouCommand : IDiscordCommand
 {
     public string Description => "Say a fancy thank you to someone special";
 
-    public void Init()
+    public async Task OnMessage(MessageInfo info)
     {
-
-    }
-
-    public async Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments)
-    {
-        if (e.MentionedUsers.Count < 1)
+        if (info.E.MentionedUsers.Count < 1)
         {
-            await client.SendMessageAsync(e.Channel, "Please mention someone to thank.");
+            await info.SendPublic("Please mention someone to thank.");
             return;
         }
 
@@ -30,8 +25,8 @@ internal class ThankYouCommand : IDiscordCommand
             Footer = new() { Text = "With love, Donald Trump <3" }
         };
 
-        builder.AddField("\u200B", $"Thank you {e.MentionedUsers[0].Username}, very cool!", true);
+        builder.AddField("\u200B", $"Thank you {info.E.MentionedUsers[0].Username}, very cool!", true);
 
-        await client.SendMessageAsync(e.Channel, builder);
+        await info.SendPublic(builder.Build());
     }
 }

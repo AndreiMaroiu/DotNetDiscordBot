@@ -8,30 +8,25 @@ internal class AvatarCommand : IDiscordCommand
 {
     public string Description => "See your fancy avatar or someone else's fancy avatar.";
 
-    public void Init()
-    {
-
-    }
-
-    public async Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments)
+    public async Task OnMessage(MessageInfo info)
     {
         DiscordEmbedBuilder builder = new()
         {
             Color = BotColors.Main
         };
 
-        if (e.MentionedUsers.Count > 0)
+        if (info.E.MentionedUsers.Count > 0)
         {
-            var mention = e.MentionedUsers[0];
+            var mention = info.E.MentionedUsers[0];
             builder.Title = $"{mention.Username}'s Avatar";
             builder.WithImageUrl(mention.AvatarUrl);
         }
         else
         {
-            builder.Title = $"{e.Author.Username}'s Avatar";
-            builder.WithImageUrl(e.Author.AvatarUrl);
+            builder.Title = $"{info.E.Author.Username}'s Avatar";
+            builder.WithImageUrl(info.E.Author.AvatarUrl);
         }
 
-        await client.SendMessageAsync(e.Channel, builder);
+        await info.SendPublic(builder);
     }
 }

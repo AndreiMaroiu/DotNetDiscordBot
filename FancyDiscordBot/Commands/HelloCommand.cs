@@ -6,23 +6,20 @@ internal class HelloCommand : IDiscordCommand
 {
     public string Description => "Get a greeting from Fancy Bot. You can also tag someone to greet him.";
 
-    public void Init()
+    public async Task OnMessage(MessageInfo info)
     {
+        var e = info.E;
 
-    }
-
-    public async Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments)
-    {
-        if (arguments.Length > 0 && e.MentionedUsers.Count > 0)
+        if (e.MentionedUsers.Count > 0)
         {
             foreach (var user in e.MentionedUsers)
             {
-                await client.SendMessageAsync(e.Channel, $"Hello {user.Mention}");
+                await info.SendPublic($"Hello {user.Mention}");
             }
 
             return;
         }
 
-        await client.SendMessageAsync(e.Channel, $"Hello {e.Message.Author.Mention}");
+        await info.SendPublic($"Hello {e.Message.Author.Mention}");
     }
 }

@@ -7,27 +7,22 @@ internal class KillCommand : IDiscordCommand
 {
     public string Description => "Kill someone. In a fancy way of course!";
 
-    public void Init()
+    public async Task OnMessage(MessageInfo info)
     {
-
-    }
-
-    public async Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments)
-    {
-        if (arguments.Length > 0 && arguments[0] == "me")
+        if (info.Arguments.Length > 0 && info.Arguments[0] == "me")
         {
-            await client.SendMessageAsync(e.Channel, "Please Master, don't kill yourself, I believe in you! :heart:");
+            await info.SendPublic("Please Master, don't kill yourself, I believe in you! :heart:");
             return;
         }
 
-        if (e.MentionedUsers.Count < 1)
+        if (info.E.MentionedUsers.Count < 1)
         {
-            await client.SendMessageAsync(e.Channel, "Please mention someone to kill.");
+            await info.SendPublic("Please mention someone to kill.");
             return;
         }
 
-        DiscordUser user = e.MentionedUsers[0];
+        DiscordUser user = info.E.MentionedUsers[0];
 
-        await client.SendMessageAsync(e.Channel, $"Fancy kill attempt at {user.Mention} begun {DiscordEmoji.FromName(client, ":SlavSquat:")}!");
+        await info.SendPublic($"Fancy kill attempt at {user.Mention} begun {DiscordEmoji.FromName(info.Client, ":SlavSquat:")}!");
     }
 }

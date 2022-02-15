@@ -14,7 +14,7 @@ DiscordClient client = new DiscordClient(new DiscordConfiguration()
     Intents = DiscordIntents.AllUnprivileged | DiscordIntents.GuildMembers,
 });
 
-BotService service = new BotService(client, "fancy", config);
+BotService service = new(client, "fancy", config);
 
 client.MessageCreated += async (sender, e) =>
 {

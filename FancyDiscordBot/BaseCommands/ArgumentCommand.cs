@@ -2,7 +2,7 @@
 
 namespace FancyDiscordBot.BaseCommands;
 
-internal abstract class ArgumentCommand : IDiscordCommand
+internal abstract class ArgumentCommand : IDiscordCommand, IDiscordInit
 {
     private readonly Dictionary<string, ArgumentInfo> _argumentActions = new();
     
@@ -46,7 +46,7 @@ internal abstract class ArgumentCommand : IDiscordCommand
 
         return method.ReturnType == typeof(Task) 
             && parameters.Length == 1 
-            && parameters[0].ParameterType == typeof(MessageCreateEventArgs);
+            && parameters[0].ParameterType == typeof(MessageInfo);
     }
 
     public abstract string Description { get; }
@@ -56,41 +56,38 @@ internal abstract class ArgumentCommand : IDiscordCommand
         
     }
 
-    public virtual async Task OnArgumentNotFound(MessageCreateEventArgs e, string argument)
+    public virtual async Task OnArgumentNotFound(MessageInfo info, string argument)
     {
-        await Client.SendMessageAsync(e.Channel, "No such fancy argument exists");
+        await info.SendPublic("No such fancy argument exists");
     }
 
-    public virtual async Task OnIncorrectOrder(MessageCreateEventArgs e, ArgumentInfo argument)
+    public virtual async Task OnIncorrectOrder(MessageInfo info, ArgumentInfo argument)
     {
-        await Client.SendMessageAsync(e.Channel, 
-            $"argument order incorect, {argument.Attribute.Argument} should be before " +
+        await info.SendPublic($"argument order incorect, {argument.Attribute.Argument} should be before " +
             $"{argument.Attribute.Last}");
     }
 
-    public async Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments)
+    public Task OnMessage(MessageInfo info)
     {
-        ArgumentInfo info = _argumentActions[""];
+        ArgumentInfo argInfo = _argumentActions[""];
 
-        foreach (var argument in arguments)
+        foreach (var argument in info.Arguments)
         {
             if (!_argumentActions.ContainsKey(argument))
             {
-                await OnArgumentNotFound(e, argument);
-                return;
+                return OnArgumentNotFound(info, argument);
             }
 
             ArgumentInfo current = _argumentActions[argument];
-            if (current.Attribute.Last != info.Attribute.Argument)
+            if (current.Attribute.Last != argInfo.Attribute.Argument)
             {
-                await OnIncorrectOrder(e, current);
-                return;
+                return OnIncorrectOrder(info, current);
             }
 
-            info = current;
+            argInfo = current;
         }
 
-        info.Method.Invoke(this, new object[] { e });
+        return argInfo.Method.Invoke(this, new object[] { info }) as Task;
     }
 }
 

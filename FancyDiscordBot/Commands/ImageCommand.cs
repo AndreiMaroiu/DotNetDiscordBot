@@ -12,36 +12,32 @@ internal class ImageCommand : BaseImageCommand, IDiscordCommand
 
     public string Description => "Get a fancy image. Requires one parameter to search for. Ex: fancy image cat";
 
-    public void Init()
+    public async Task OnMessage(MessageInfo info)
     {
-
-    }
-
-    public async Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments)
-    {
-        if (arguments.Length < 1)
+        if (info.Arguments.Length < 1)
         {
-            await client.SendMessageAsync(e.Channel, "No image type provided!");
+            await info.SendPublic("No image type provided!");
             return;
         }
 
         StringBuilder builder = new();
 
-        for (int i = 0; i < arguments.Length - 1; i++)
+        for (int i = 0; i < info.Arguments.Length - 1; i++)
         {
-            builder.Append(arguments[i]).Append(" ");
+            builder.Append(info.Arguments[i]).Append(' ');
         }
 
-        builder.Append(arguments[^1]);
+        builder.Append(info.Arguments[^1]);
 
-        var type = builder.ToString();
+        string type = builder.ToString();
+
         try
         {
-            await client.SendMessageAsync(e.Channel, GetRandomImage(type));
+            await info.SendPublic(GetRandomImage(type));
         }
         catch
         {
-            await client.SendMessageAsync(e.Channel, $"Could not find not a single fancy image of type: {type}");
+            await info.SendPublic($"Could not find not a single fancy image of type: {type}");
         }
     }
 }

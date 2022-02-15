@@ -19,11 +19,6 @@ internal class PricesCommand : IDiscordCommand
 
     public string Description => "Find the prices of a game. A name must be specified!";
 
-    public void Init()
-    {
-
-    }
-
     public async Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments)
     {
         if (arguments.Length < 1)
@@ -75,5 +70,10 @@ internal class PricesCommand : IDiscordCommand
         return $"https://isthereanydeal.com/game/{builder.ToString()}/info/";
 
         //return "https://isthereanydeal.com/game/horizonzerodawn/info/";
+    }
+
+    public Task OnMessage(MessageInfo info)
+    {
+        throw new NotImplementedException();
     }
 }

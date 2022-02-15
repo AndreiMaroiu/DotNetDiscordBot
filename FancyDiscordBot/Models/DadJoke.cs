@@ -2,7 +2,7 @@
 
 internal class DadJoke
 {
-    public bool Succes { get; set; }
-    public List<DadJokeBody> Body { get; set; }
+    public string Id { get; set; }
+    public string Joke { get; set; }
+    public int Status { get; set; }
 }
-

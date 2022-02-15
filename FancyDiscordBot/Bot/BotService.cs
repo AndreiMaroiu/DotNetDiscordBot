@@ -28,7 +28,10 @@ public class BotService
 
         foreach (var command in _commands)
         {
-            command.Value.Init();
+            if (command.Value is IDiscordInit init)
+            {
+                init.Init();
+            }
         }
     }
 
@@ -66,7 +69,7 @@ public class BotService
 
         try
         {
-            await _commands[command].OnMessage(_client, e, (arguments is not null && arguments.Length > 0) ? arguments[1..] : arguments);
+            await HandleCommand(command, e, (arguments is not null && arguments.Length > 0) ? arguments[1..] : arguments);
             Console.WriteLine($"Reacted to massage: {e.Message.Content} from user: {e.Author.Username}");
         }
         catch (Exception exception)
@@ -75,6 +78,21 @@ public class BotService
         }
     }
 
+    private async Task HandleCommand(string trigger, MessageCreateEventArgs e, string[] arguments)
+    {
+        int startIndex = _prefix.Length + trigger.Length + 2;
+        string message = e.Message.Content;
+
+        await _commands[trigger].OnMessage(new MessageInfo()
+        {
+            Arguments = arguments,
+            Client = _client,
+            E = e,
+            Message = (startIndex < message.Length) ? message[startIndex..] : null,
+        });
+    }
+
+    #region Members Actions
     public async Task OnNewMember(GuildMemberAddEventArgs e)
     {
         DiscordChannel channel = e.Guild.Channels.Where(x => x.Value.Name == "general").FirstOrDefault().Value;
@@ -113,4 +131,5 @@ public class BotService
 
         await _client.SendMessageAsync(channel, builder.Build());
     }
+    #endregion
 }

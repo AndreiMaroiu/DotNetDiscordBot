@@ -8,33 +8,20 @@ internal class YoMamaCommand : BaseWebCommand, IDiscordCommand
 
     public YoMamaCommand() : base(url, xpath)
     {
-
+        //_nodes = _nodes.Where(x => !string.IsNullOrEmpty(x.InnerText));
     }
 
     public string Description => "Yo mama so fat";
 
-    public void Init()
+    public async Task OnMessage(MessageInfo info)
     {
-
-    }
-
-    public async Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments)
-    {
-        string joke = null;
-
-        try
+        string joke;
+        do
         {
-            do
-            {
-                joke = GetRandomJoke();
-            } while (string.IsNullOrWhiteSpace(joke));
+            joke = GetRandomJoke();
+        } while (string.IsNullOrWhiteSpace(joke));
 
-            await client.SendMessageAsync(e.Channel, joke);
-        }
-        catch
-        {
-            Console.WriteLine($"something went wrong when trying to send joke: {joke}");
-        }
+        await info.SendPublic(joke);
     }
 
     private string GetRandomJoke() => GetRandomNode().InnerText;

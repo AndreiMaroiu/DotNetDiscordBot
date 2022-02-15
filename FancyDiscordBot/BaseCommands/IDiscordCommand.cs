@@ -2,7 +2,6 @@
 
 internal interface IDiscordCommand
 {
-    Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments);
+    Task OnMessage(MessageInfo info);
     string Description { get; }
-    void Init();
 }

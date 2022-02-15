@@ -70,23 +70,14 @@ internal sealed class HelpCommand : ArgumentCommand
 
 
     [Argument("", "")]
-    public async Task OnSimple(MessageCreateEventArgs e)
+    public async Task OnSimple(MessageInfo info)
     {
-        await Client.SendMessageAsync(e.Channel, _embededHelp);
+        await info.SendPublic(_embededHelp);
     }
 
     [Argument("private", "")]
-    public async Task OnPrivate(MessageCreateEventArgs e)
+    public async Task OnPrivate(MessageInfo info)
     {
-        DiscordMember member = e.Author as DiscordMember;
-
-        if (member is not null)
-        {
-            await member.SendMessageAsync(_embededHelp);
-        }
-        else
-        {
-            await Client.SendMessageAsync(e.Channel, _embededHelp);
-        }
+        await info.SendPrivate(_embededHelp);
     }
 }

@@ -5,13 +5,8 @@ internal class Order66Command : IDiscordCommand
 {
     public string Description => "Execute Order 66.";
 
-    public void Init()
+    public async Task OnMessage(MessageInfo info)
     {
-
-    }
-
-    public async Task OnMessage(DiscordClient client, MessageCreateEventArgs e, string[] arguments)
-    {
-        await client.SendMessageAsync(e.Channel, "It will be done my lord.");
+        await info.SendPublic("It will be done my lord.");
     }
 }

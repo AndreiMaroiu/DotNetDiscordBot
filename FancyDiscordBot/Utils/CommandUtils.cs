@@ -32,7 +32,7 @@ internal class CommandUtils
         var types = assembly.GetTypes()
             .Where(type => typeof(IDiscordCommand).IsAssignableFrom(type) && !type.IsAbstract);
 
-        foreach (var type in types)
+        foreach (Type type in types)
         {
             CommandAttribute[] attributes = GetCommandAttribute(type);
 

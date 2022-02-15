@@ -10,32 +10,32 @@ internal class ExecuteCommand : ArgumentCommand
     public override string Description => "Execute some fancy orders, like order 66 or a sandwich";
 
     [Argument("", "")]
-    public async Task OnSimple(MessageCreateEventArgs e)
+    public async Task OnSimple(MessageInfo e)
     {
-        await Client.SendMessageAsync(e.Channel, "Please say an order to execute");
+        await e.SendPublic("Please say an order to execute");
     }
 
     [Argument("order", "")]
-    public async Task OnOrder(MessageCreateEventArgs e)
+    public async Task OnOrder(MessageInfo e)
     {
-        await Client.SendMessageAsync(e.Channel, "Please say what order to execute");
+        await e.SendPublic("Please say what order to execute");
     }
 
     [Argument("66", "order")]
-    public async Task On66(MessageCreateEventArgs e)
+    public async Task On66(MessageInfo e)
     {
-        await Client.SendMessageAsync(e.Channel, "It will be done my lord!");
+        await e.SendPublic("It will be done my lord!");
     }
 
     [Argument("me", "")]
-    public async Task OnMe(MessageCreateEventArgs e)
+    public async Task OnMe(MessageInfo e)
     {
-        await Client.SendMessageAsync(e.Channel, "Kinky.");
+        await e.SendPublic("Kinky.");
     }
 
     [Argument("sandwich", "")]
-    public async Task OnSandwich(MessageCreateEventArgs e)
+    public async Task OnSandwich(MessageInfo e)
     {
-        await Client.SendMessageAsync(e.Channel, "Sorry, I run out of bread. :pensive:");
+        await e.SendPublic("Sorry, I run out of bread. :pensive:");
     }
 }
